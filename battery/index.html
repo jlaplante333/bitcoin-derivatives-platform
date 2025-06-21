@@ -142,7 +142,29 @@
             <div class="status-card">
                 <h3>🎯 Latest Decision</h3>
                 <div id="latestDecision">
-                    <div class="loading">Waiting for decisions...</div>
+                    <div class="loading">Loading latest decision...</div>
+                </div>
+            </div>
+
+            <div class="status-card">
+                <h3>💰 Profit Dashboard</h3>
+                <div id="profitDashboard">
+                    <div class="loading">Loading profit data...</div>
+                </div>
+            </div>
+
+            <div class="status-card">
+                <h3>📈 Profit Breakdown</h3>
+                <div id="profitBreakdown">
+                    <div class="loading">Loading profit breakdown...</div>
+                </div>
+            </div>
+
+            <div class="status-card">
+                <h3>🔄 Profit Actions</h3>
+                <div class="button-group">
+                    <button class="btn btn-warning" onclick="resetProfits()">🔄 Reset Profits</button>
+                    <button class="btn btn-info" onclick="showProfitHistory()">📊 Profit History</button>
                 </div>
             </div>
         </div>
@@ -407,6 +429,110 @@
             container.innerHTML = decisionsHtml;
         }
 
+        async function updateProfitDashboard() {
+            try {
+                const response = await fetch('/api/profits');
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateProfitData(data.profit_data);
+                    updateProfitBreakdown(data.profit_data);
+                }
+            } catch (error) {
+                console.error('Error updating profit dashboard:', error);
+            }
+        }
+
+        function updateProfitData(profitData) {
+            const container = document.getElementById('profitDashboard');
+            const totalProfit = profitData.total_profit || 0;
+            const profitClass = totalProfit >= 0 ? 'success' : 'error';
+            
+            container.innerHTML = `
+                <div class="status-item">
+                    <span>Total Profit:</span>
+                    <span style="color: ${totalProfit >= 0 ? '#28a745' : '#dc3545'}; font-weight: bold;">
+                        $${totalProfit.toFixed(2)}
+                    </span>
+                </div>
+                <div class="status-item">
+                    <span>Last Updated:</span>
+                    <span>${profitData.last_updated ? new Date(profitData.last_updated).toLocaleString() : 'Never'}</span>
+                </div>
+                <div class="status-item">
+                    <span>Records:</span>
+                    <span>${profitData.profit_history ? profitData.profit_history.length : 0}</span>
+                </div>
+            `;
+        }
+
+        function updateProfitBreakdown(profitData) {
+            const container = document.getElementById('profitBreakdown');
+            
+            container.innerHTML = `
+                <div class="status-item">
+                    <span>Energy Sales:</span>
+                    <span style="color: #28a745;">$${(profitData.energy_sales_profit || 0).toFixed(2)}</span>
+                </div>
+                <div class="status-item">
+                    <span>Mining Profit:</span>
+                    <span style="color: #28a745;">$${(profitData.mining_profit || 0).toFixed(2)}</span>
+                </div>
+                <div class="status-item">
+                    <span>Computing Profit:</span>
+                    <span style="color: #28a745;">$${(profitData.computing_profit || 0).toFixed(2)}</span>
+                </div>
+                <div class="status-item">
+                    <span>Energy Costs:</span>
+                    <span style="color: #dc3545;">-$${(profitData.energy_costs || 0).toFixed(2)}</span>
+                </div>
+            `;
+        }
+
+        async function resetProfits() {
+            try {
+                const response = await fetch('/api/reset_profits', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('Profit data reset successfully!', 'success');
+                    updateProfitDashboard();
+                } else {
+                    showMessage('Failed to reset profits: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error resetting profits: ' + error.message, 'error');
+            }
+        }
+
+        async function showProfitHistory() {
+            try {
+                const response = await fetch('/api/profit_history');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const history = data.profit_history;
+                    if (history.length === 0) {
+                        showMessage('No profit history available yet.', 'info');
+                        return;
+                    }
+                    
+                    const recentHistory = history.slice(-5).reverse();
+                    const historyText = recentHistory.map(record => 
+                        `${new Date(record.timestamp).toLocaleString()}: $${record.total_profit.toFixed(2)} (${record.action})`
+                    ).join('\n');
+                    
+                    showMessage('Recent Profit History:\n' + historyText, 'info');
+                }
+            } catch (error) {
+                showMessage('Error fetching profit history: ' + error.message, 'error');
+            }
+        }
+
         function showMessage(message, type) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${type}`;
@@ -422,6 +548,7 @@
             updateInterval = setInterval(() => {
                 updateStatus();
                 updateDecisionHistory();
+                updateProfitDashboard();
             }, 5000);
         }
 
@@ -435,6 +562,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             updateStatus();
             updateDecisionHistory();
+            updateProfitDashboard();
         });
     </script>
 </body>
