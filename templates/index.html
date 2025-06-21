@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARA Hedging</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MARA <span style="color: #00ffff;">Hedging</span></h1>
+            <div class="header-widgets">
+                <div class="btc-price">
+                    <h2>Current BTC Price</h2>
+                    <p id="btc-price">{{ btc_price }}</p>
+                </div>
+                <div class="market-data-widget card">
+                    <h2 class="widget-title">Live Market Data</h2>
+                    <div class="widget-items-container">
+                        <div class="widget-item">
+                            <span class="widget-label">Energy</span>
+                            <span id="energy-price-widget" class="widget-value"></span>
+                        </div>
+                        <div class="widget-item">
+                            <span class="widget-label">Hash</span>
+                            <span id="hash-price-widget" class="widget-value"></span>
+                        </div>
+                        <div class="widget-item">
+                            <span class="widget-label">Inference</span>
+                            <span id="token-price-widget" class="widget-value"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="dashboard-row">
+                <section class="monte-carlo-sim card">
+                    <h2>
+                        <span class="icon-container">
+                            <img src="/static/bitcoin_img.jpg" alt="Bitcoin Icon" class="icon-bitcoin-img">
+                        </span>
+                        Bitcoin Monte Carlo Simulation / Forecast <span class="tooltip-icon" data-tooltip="This is a monte carlo simulation showing forecasted market cap depending on Bitcoin price.">?</span>
+                    </h2>
+                    <p class="sub-heading">100 Simulated Portfolio Futures</p>
+                    <div class="chart-container">
+                        <canvas id="monteCarloChart"></canvas>
+                    </div>
+                    <p class="chart-description">This is a Monte Carlo simulation showing the forecasted market cap based on 100 possible future scenarios.</p>
+                </section>
+    
+                <section class="composite-payoff-card card">
+                    <h2>
+                        <span class="icon-container">
+                            <img src="/static/bitcoin_img.jpg" alt="Bitcoin Icon" class="icon-bitcoin-img">
+                        </span>
+                        Bitcoin Hedging Portfolio
+                    </h2>
+                    <p class="sub-heading">Monte Carlo Forecast <span class="tooltip-icon" data-tooltip="This diagram shows the combined profit/loss profile of all options and futures contracts over the next 12 months, based on the 100 simulated Bitcoin price scenarios.">?</span></p>
+                    <div class="chart-container">
+                        <canvas id="compositePayoffChart"></canvas>
+                    </div>
+                    <p class="chart-description">This diagram shows the combined profit/loss profile of all options and futures contracts over the next 12 months, based on the 100 simulated Bitcoin price scenarios.</p>
+                </section>
+    
+                <section class="composite-analysis-card card">
+                    <h2>
+                        <span class="icon-container">
+                            <img src="/static/bitcoin_img.jpg" alt="Bitcoin Icon" class="icon-bitcoin-img">
+                        </span>
+                        Composite Bitcoin Analysis
+                    </h2>
+                    <p class="sub-heading">Combined Market Cap and Portfolio Value Forecast <span class="tooltip-icon" data-tooltip="This chart shows the sum of the 100 simulated Bitcoin market cap scenarios and the resulting portfolio values, representing the total combined value over time.">?</span></p>
+                    <div class="chart-container">
+                        <canvas id="compositeBitcoinChart"></canvas>
+                    </div>
+                    <p class="chart-description">This chart shows the sum of the 100 simulated Bitcoin market cap scenarios and the resulting portfolio values, representing the total combined value over time.</p>
+                </section>
+            </div>
+
+            <section class="electricity-sim card">
+                <h2>
+                    <span class="icon-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-lightning"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    </span>
+                    Electricity Price Forecast
+                </h2>
+                <p class="sub-heading">100 Simulated Electricity Price Futures <span class="tooltip-icon" data-tooltip="This simulation forecasts future electricity prices to anticipate operational costs.">?</span></p>
+                <div class="chart-container">
+                    <canvas id="electricityMonteCarloChart"></canvas>
+                </div>
+                <p class="chart-description">This simulation forecasts future electricity prices to anticipate operational costs.</p>
+            </section>
+
+            <section class="electricity-hedging-card card">
+                <h2>
+                    <span class="icon-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-lightning"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    </span>
+                    Electricity Hedging Portfolio
+                </h2>
+                <p class="sub-heading">Monte Carlo Forecast <span class="tooltip-icon" data-tooltip="This diagram shows the combined value of all electricity derivatives contracts over the next 12 months, based on 30 simulated electricity price scenarios.">?</span></p>
+                <div class="chart-container">
+                    <canvas id="electricityHedgingChart"></canvas>
+                </div>
+                <p class="chart-description">This diagram shows the combined value of all electricity derivatives contracts over the next 12 months, based on 30 simulated electricity price scenarios.</p>
+            </section>
+
+            <section class="composite-analysis-card electricity-theme card">
+                <h2>
+                    <span class="icon-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-lightning"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    </span>
+                    Composite Electricity Analysis
+                </h2>
+                <p class="sub-heading">Combined Market Cap and Portfolio Value Forecast <span class="tooltip-icon" data-tooltip="This chart shows the sum of the 100 simulated market cap scenarios and the resulting electricity portfolio values, representing the total combined value over time.">?</span></p>
+                <div class="chart-container">
+                    <canvas id="compositeElectricityChart"></canvas>
+                </div>
+                <p class="chart-description">This chart shows the sum of the 100 simulated market cap scenarios and the resulting electricity portfolio values, representing the total combined value over time.</p>
+            </section>
+
+            <section class="composite-dashboard electricity-dashboard card">
+                <h2>
+                    <span class="icon-container">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-lightning"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    </span>
+                    Composite Dashboard - Electricity
+                    <span class="tooltip-icon" data-tooltip="This dashboard displays all active electricity-based options and futures contracts.">?</span>
+                </h2>
+                <div class="contracts-tables">
+                    <div class="table-wrapper">
+                        <h3>Options Contracts</h3>
+                        <div class="table-container">
+                             <table>
+                                <thead>
+                                    <tr>
+                                        <th>Contract #</th>
+                                        <th>Asset</th>
+                                        <th>Type</th>
+                                        <th>Expiry</th>
+                                        <th>Strike Price</th>
+                                        <th>Forward Price</th>
+                                        <th>Implied Volatility</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="electricity-options-contracts-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <h3>Futures Contracts</h3>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Contract #</th>
+                                        <th>Asset</th>
+                                        <th>Type</th>
+                                        <th>Expiry</th>
+                                        <th>Strike Price</th>
+                                        <th>Forward Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="electricity-futures-contracts-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="composite-dashboard card">
+                <h2>
+                    <span class="icon-container">
+                        <img src="/static/bitcoin_img.jpg" alt="Bitcoin Icon" class="icon-bitcoin-img">
+                    </span>
+                    Composite Dashboard - Bitcoin
+                    <span class="tooltip-icon" data-tooltip="This dashboard displays all active Bitcoin-based options and futures contracts.">?</span>
+                </h2>
+                <div class="contracts-tables">
+                    <div class="table-wrapper">
+                        <h3>Options Contracts</h3>
+                        <div class="table-container">
+                             <table>
+                                <thead>
+                                    <tr>
+                                        <th>Contract #</th>
+                                        <th>Asset</th>
+                                        <th>Type</th>
+                                        <th>Expiry</th>
+                                        <th>Strike Price</th>
+                                        <th>Forward Price</th>
+                                        <th>Implied Volatility</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="options-contracts-body">
+                                    <!-- Options contracts will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <h3>Futures Contracts</h3>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Contract #</th>
+                                        <th>Asset</th>
+                                        <th>Type</th>
+                                        <th>Expiry</th>
+                                        <th>Strike Price</th>
+                                        <th>Forward Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="futures-contracts-body">
+                                    <!-- Futures contracts will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="analysis card">
+                <button id="analyze-btn">Analyze</button>
+                <div id="analysis-summary" class="hidden">
+                    <h3>Analysis Summary</h3>
+                    <p>Summary of some proposed daily positions appear here.</p>
+                    <div class="trade-notification">
+                        <p>Based on the analysis, we recommend the following trade:</p>
+                        <p><strong>Trade:</strong> Buy BTC Put Option @ $60K</p>
+                        <button id="confirm-trade-btn">Execute Trade</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="portfolio-sensitivity card">
+                <h2>Portfolio Sensitivity <span class="tooltip-icon" data-tooltip="This 3D surface plot visualizes the portfolio's Gamma (sensitivity to changes in the underlying asset's price) over time.">?</span></h2>
+                <div id="portfolioSensitivityChart" class="chart-container-3d"></div>
+            </section>
+        </main>
+        <section class="ai-strategy card">
+            <h2>
+                <span class="icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-lightning"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    <img src="/static/bitcoin_img.jpg" alt="Bitcoin Icon" class="icon-bitcoin-img">
+                </span>
+                AI-Powered Strategy Input
+                <span class="tooltip-icon" data-tooltip="Define your risk parameters and let the AI generate a tailored hedging strategy.">?</span>
+            </h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Time Horizon</th>
+                            <th>Exposure Managed</th>
+                            <th>Delta (BTC & Energy)</th>
+                            <th>Vega</th>
+                            <th>Analyze</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ai-strategy-input-body">
+                        <!-- Rows will be dynamically inserted here by script.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="ai-recommendation-dashboard" class="card hidden">
+            <h2>
+                 <span class="icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-lightning"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    <img src="/static/bitcoin_img.jpg" alt="Bitcoin Icon" class="icon-bitcoin-img">
+                </span>
+                AI Recommended Positions
+            </h2>
+            <div id="ai-recommendation-body">
+                <!-- AI analysis will be loaded here -->
+            </div>
+            <button id="execute-ai-trades-btn" class="hidden">Execute Trade Block</button>
+        </section>
+
+        <section class="exchange-contracts card">
+            <h2>
+                <span class="icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-lightning"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                </span>
+                Exchange Traded Contracts - Energy
+                <span class="tooltip-icon" data-tooltip="This table displays current mock data for exchange-traded energy contracts.">?</span>
+            </h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Quantity (MWh)</th>
+                            <th>Delivery Period</th>
+                            <th>Delivery Location</th>
+                            <th>Price ($/MWh)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="exchange-contracts-body">
+                        <!-- contracts will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <span class="modal-close-btn">&times;</span>
+            <div class="modal-icon-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="success-icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+            </div>
+            <h2>Trade Executed</h2>
+            <p>Your AI-recommended trade block has been successfully executed.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.1/dist/chartjs-plugin-annotation.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="/static/script.js"></script>
+</body>
+</html> 
