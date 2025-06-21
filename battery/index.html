@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>MARA Real-time Bitcoin mining & AI computation operations</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #2c3e50; margin-bottom: 10px; }
+        .header p { color: #7f8c8d; }
+        .battery-info { background: #e8f4fd; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #3498db; }
+        .battery-info h3 { color: #2c3e50; margin-bottom: 15px; }
+        .battery-specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        .spec-item { background: white; padding: 10px; border-radius: 4px; border: 1px solid #bdc3c7; }
+        .spec-label { font-weight: bold; color: #2c3e50; font-size: 0.9em; }
+        .spec-value { color: #34495e; margin-top: 5px; }
+        .control-panel { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .button-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .btn-info { background: #17a2b8; color: white; }
+        .status-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .status-card { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; }
+        .status-card h3 { margin-bottom: 10px; color: #2c3e50; }
+        .status-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #eee; }
+        .status-item:last-child { border-bottom: none; }
+        .decision-history { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; }
+        .decision-item { background: white; padding: 10px; margin-bottom: 10px; border-radius: 4px; border-left: 4px solid #007bff; }
+        .decision-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .decision-action { padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        .action-charge { background: #d4edda; color: #155724; }
+        .action-discharge { background: #f8d7da; color: #721c24; }
+        .action-sell { background: #fff3cd; color: #856404; }
+        .action-hold { background: #d1ecf1; color: #0c5460; }
+        .loading { text-align: center; padding: 20px; color: #6c757d; }
+        .message { padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔋 MARA Real-time Bitcoin mining & AI computation operations</h1>
+            <p>LG Energy Solution Battery System</p>
+        </div>
+
+        <div class="battery-info">
+            <h3>🔧 LG Energy Solution ESS Specifications</h3>
+            <div class="battery-specs">
+                <div class="spec-item">
+                    <div class="spec-label">Model</div>
+                    <div class="spec-value">LG Energy Solution RESU16H Prime ESS</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Capacity</div>
+                    <div class="spec-value">100 MWh</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Max Power</div>
+                    <div class="spec-value">25 MW</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Efficiency</div>
+                    <div class="spec-value">92%</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Cycle Life</div>
+                    <div class="spec-value">4000 cycles</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Warranty</div>
+                    <div class="spec-value">10 years</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Temperature Range</div>
+                    <div class="spec-value">-20°C to +60°C</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Footprint</div>
+                    <div class="spec-value">40ft x 20ft container</div>
+                </div>
+            </div>
+            <div class="info">
+                <strong>Bitcoin Mining Benefits:</strong> Reduces energy costs by 20-40% through arbitrage, 
+                provides backup power during outages, smooths power consumption, and enables mining during 
+                peak profitability periods.
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <h2>🎛️ Control Panel</h2>
+            <div class="form-group">
+                <label for="chargeThreshold">Charge Threshold (Energy Price)</label>
+                <input type="number" id="chargeThreshold" value="1.7" step="0.1" min="0">
+            </div>
+            <div class="input-group">
+                <label for="dischargeThreshold">Discharge Threshold (Energy Price)</label>
+                <input type="number" id="dischargeThreshold" value="2.0" step="0.1" min="0">
+            </div>
+            <div class="input-group">
+                <label for="sellThreshold">Sell Threshold (Battery Charge %)</label>
+                <input type="number" id="sellThreshold" value="80.0" step="1" min="0" max="100">
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="startMonitoring()">🚀 Start Monitoring</button>
+                <button class="btn btn-danger" onclick="stopMonitoring()">🛑 Stop Monitoring</button>
+                <button class="btn btn-success" onclick="updateThresholds()">⚙️ Update Thresholds</button>
+                <button class="btn btn-warning" onclick="resetBattery()">🔄 Reset Battery</button>
+                <button class="btn btn-info" onclick="showBatteryInfo()">ℹ️ Battery Info</button>
+            </div>
+        </div>
+
+        <div class="status-panel">
+            <div class="status-card">
+                <h3>🔋 Battery Status</h3>
+                <div id="batteryStatus">
+                    <div class="loading">Loading battery status...</div>
+                </div>
+            </div>
+
+            <div class="status-card">
+                <h3>📊 Price Data</h3>
+                <div id="priceData">
+                    <div class="loading">Loading price data...</div>
+                </div>
+            </div>
+
+            <div class="status-card">
+                <h3>🎯 Latest Decision</h3>
+                <div id="latestDecision">
+                    <div class="loading">Waiting for decisions...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="decision-history">
+            <h2>📈 Decision History</h2>
+            <div id="decisionHistory">
+                <div class="loading">No decisions yet. Start monitoring to see decisions.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isMonitoring = false;
+        let updateInterval;
+
+        async function startMonitoring() {
+            const chargeThreshold = document.getElementById('chargeThreshold').value;
+            const dischargeThreshold = document.getElementById('dischargeThreshold').value;
+            const sellThreshold = document.getElementById('sellThreshold').value;
+
+            try {
+                const response = await fetch('/api/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        charge_threshold: parseFloat(chargeThreshold),
+                        discharge_threshold: parseFloat(dischargeThreshold),
+                        sell_threshold: parseFloat(sellThreshold)
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('Monitoring started successfully!', 'success');
+                    isMonitoring = true;
+                    startUpdates();
+                } else {
+                    showMessage('Failed to start monitoring: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error starting monitoring: ' + error.message, 'error');
+            }
+        }
+
+        async function stopMonitoring() {
+            try {
+                const response = await fetch('/api/stop', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('Monitoring stopped successfully!', 'success');
+                    isMonitoring = false;
+                    stopUpdates();
+                } else {
+                    showMessage('Failed to stop monitoring: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error stopping monitoring: ' + error.message, 'error');
+            }
+        }
+
+        async function updateThresholds() {
+            const chargeThreshold = document.getElementById('chargeThreshold').value;
+            const dischargeThreshold = document.getElementById('dischargeThreshold').value;
+            const sellThreshold = document.getElementById('sellThreshold').value;
+
+            try {
+                const response = await fetch('/api/update_thresholds', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        charge_threshold: parseFloat(chargeThreshold),
+                        discharge_threshold: parseFloat(dischargeThreshold),
+                        sell_threshold: parseFloat(sellThreshold)
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('Thresholds updated successfully!', 'success');
+                } else {
+                    showMessage('Failed to update thresholds: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error updating thresholds: ' + error.message, 'error');
+            }
+        }
+
+        async function resetBattery() {
+            try {
+                const response = await fetch('/api/reset_battery', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('Battery reset successfully!', 'success');
+                    updateStatus();
+                } else {
+                    showMessage('Failed to reset battery: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error resetting battery: ' + error.message, 'error');
+            }
+        }
+
+        async function showBatteryInfo() {
+            try {
+                const response = await fetch('/api/battery_info');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const info = data.description;
+                    showMessage('LG Energy Solution ESS: ' + info, 'info');
+                }
+            } catch (error) {
+                showMessage('Error fetching battery info: ' + error.message, 'error');
+            }
+        }
+
+        async function updateStatus() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateBatteryStatus(data.status);
+                    updatePriceData(data.current_status.price_data);
+                    updateLatestDecision(data.current_status.latest_decision);
+                }
+            } catch (error) {
+                console.error('Error updating status:', error);
+            }
+        }
+
+        async function updateDecisionHistory() {
+            try {
+                const response = await fetch('/api/decisions');
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayDecisionHistory(data.decisions);
+                }
+            } catch (error) {
+                console.error('Error updating decision history:', error);
+            }
+        }
+
+        function updateBatteryStatus(status) {
+            const container = document.getElementById('batteryStatus');
+            container.innerHTML = `
+                <div class="status-item">
+                    <span>Charge Level:</span>
+                    <span>${status.charge_level_percent.toFixed(1)}%</span>
+                </div>
+                <div class="status-item">
+                    <span>Available Energy:</span>
+                    <span>${status.available_energy_mwh.toFixed(2)} MWh</span>
+                </div>
+                <div class="status-item">
+                    <span>Capacity:</span>
+                    <span>${status.capacity_mwh.toFixed(1)} MWh</span>
+                </div>
+                <div class="status-item">
+                    <span>Can Charge:</span>
+                    <span>${status.can_charge ? '✅' : '❌'}</span>
+                </div>
+                <div class="status-item">
+                    <span>Can Discharge:</span>
+                    <span>${status.can_discharge ? '✅' : '❌'}</span>
+                </div>
+            `;
+        }
+
+        function updatePriceData(priceData) {
+            if (!priceData) return;
+            
+            const container = document.getElementById('priceData');
+            container.innerHTML = `
+                <div class="status-item">
+                    <span>Energy Price:</span>
+                    <span>${priceData.energy_price.toFixed(4)}</span>
+                </div>
+                <div class="status-item">
+                    <span>Hash Price:</span>
+                    <span>${priceData.hash_price.toFixed(4)}</span>
+                </div>
+                <div class="status-item">
+                    <span>Token Price:</span>
+                    <span>${priceData.token_price.toFixed(4)}</span>
+                </div>
+                <div class="status-item">
+                    <span>Timestamp:</span>
+                    <span>${new Date(priceData.timestamp).toLocaleString()}</span>
+                </div>
+            `;
+        }
+
+        function updateLatestDecision(decision) {
+            if (!decision) return;
+            
+            const container = document.getElementById('latestDecision');
+            const action = decision.decision.action;
+            const actionClass = action === 'charge' ? 'action-charge' : 
+                              action === 'discharge' ? 'action-discharge' : 
+                              action === 'sell_to_grid' ? 'action-sell' : 'action-hold';
+            
+            container.innerHTML = `
+                <div class="status-item">
+                    <span>Action:</span>
+                    <span><span class="decision-action ${actionClass}">${action.toUpperCase()}</span></span>
+                </div>
+                <div class="status-item">
+                    <span>Reason:</span>
+                    <span>${decision.decision.reason}</span>
+                </div>
+                <div class="status-item">
+                    <span>Energy Price:</span>
+                    <span>${decision.energy_price.toFixed(4)}</span>
+                </div>
+                <div class="status-item">
+                    <span>Time:</span>
+                    <span>${new Date(decision.timestamp).toLocaleString()}</span>
+                </div>
+            `;
+        }
+
+        function displayDecisionHistory(decisions) {
+            const container = document.getElementById('decisionHistory');
+            
+            if (decisions.length === 0) {
+                container.innerHTML = '<div class="loading">No decisions yet. Start monitoring to see decisions.</div>';
+                return;
+            }
+
+            const decisionsHtml = decisions.slice(-10).reverse().map(decision => {
+                const action = decision.decision.action;
+                const actionClass = action === 'charge' ? 'action-charge' : 
+                                  action === 'discharge' ? 'action-discharge' : 
+                                  action === 'sell_to_grid' ? 'action-sell' : 'action-hold';
+                
+                return `
+                    <div class="decision-item">
+                        <div class="decision-header">
+                            <span>${new Date(decision.timestamp).toLocaleString()}</span>
+                            <span class="decision-action ${actionClass}">${action.toUpperCase()}</span>
+                        </div>
+                        <div>Energy: ${decision.energy_price.toFixed(4)} | Hash: ${decision.hash_price.toFixed(4)} | Token: ${decision.token_price.toFixed(4)} | Battery: ${decision.battery_status.charge_level_percent.toFixed(1)}%</div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = decisionsHtml;
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            
+            const content = document.querySelector('.container');
+            content.insertBefore(messageDiv, content.firstChild);
+            
+            setTimeout(() => messageDiv.remove(), 8000);
+        }
+
+        function startUpdates() {
+            updateInterval = setInterval(() => {
+                updateStatus();
+                updateDecisionHistory();
+            }, 5000);
+        }
+
+        function stopUpdates() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+                updateInterval = null;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStatus();
+            updateDecisionHistory();
+        });
+    </script>
+</body>
+</html>
