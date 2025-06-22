@@ -104,9 +104,19 @@ body {
     color: var(--text-secondary);
 }
 
+.nav-icon {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-icon:hover {
+    color: var(--accent-blue);
+}
+
 .side-panel {
     left: 20px;
-    top: 50%;
+    top: 30%;
     transform: translateY(-50%);
     padding: 20px;
     z-index: 1001;
@@ -528,6 +538,7 @@ body {
     right: 30px;
     padding: 20px;
     width: 320px;
+    max-height: 400px;
     z-index: 1001;
     background: rgba(10, 25, 47, 0.7);
     display: flex;
@@ -608,6 +619,12 @@ body {
     color: var(--text-secondary);
     align-self: flex-start;
     border-bottom-left-radius: 4px;
+}
+
+.ai-message.assistant img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-top: 10px;
 }
 
 .ai-message .spinner {
@@ -838,7 +855,7 @@ body {
 }
 
 .grid-item .value {
-    font-size: 1.2rem;
+    font-size: 30px;
     font-weight: 600;
 }
 
@@ -1167,7 +1184,7 @@ body {
 /* Mini Satellite Icon (shown when feed is closed) */
 .mini-satellite-icon {
     position: fixed;
-    top: 40%;
+    top: 50%;
     left: 30px;
     width: 50px;
     height: 50px;
@@ -1244,4 +1261,487 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Operation Mode Switches */
+.operation-switches {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    scale: 0.8;
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.switch-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 50px;
+    text-align: center;
+}
+
+.switch-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.switch-item.active {
+    background: rgba(78, 149, 255, 0.3);
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 15px rgba(78, 149, 255, 0.3);
+}
+
+.switch-item i {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+}
+
+.switch-item.active i {
+    color: var(--accent-blue);
+}
+
+.switch-item span {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+
+.switch-item.active span {
+    color: var(--accent-blue);
+}
+
+/* Specific colors for different modes */
+.switch-item[data-mode="mining"]:hover,
+.switch-item[data-mode="mining"].active {
+    border-color: #f7931a;
+    box-shadow: 0 0 15px rgba(247, 147, 26, 0.3);
+}
+
+.switch-item[data-mode="mining"]:hover i,
+.switch-item[data-mode="mining"].active i,
+.switch-item[data-mode="mining"]:hover span,
+.switch-item[data-mode="mining"].active span {
+    color: #f7931a;
+}
+
+.switch-item[data-mode="ai"]:hover,
+.switch-item[data-mode="ai"].active {
+    border-color: var(--accent-green);
+    box-shadow: 0 0 15px rgba(80, 227, 194, 0.3);
+}
+
+.switch-item[data-mode="ai"]:hover i,
+.switch-item[data-mode="ai"].active i,
+.switch-item[data-mode="ai"]:hover span,
+.switch-item[data-mode="ai"].active span {
+    color: var(--accent-green);
+}
+
+.switch-item[data-mode="buy"]:hover,
+.switch-item[data-mode="buy"].active {
+    border-color: #00ff88;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+}
+
+.switch-item[data-mode="buy"]:hover i,
+.switch-item[data-mode="buy"].active i,
+.switch-item[data-mode="buy"]:hover span,
+.switch-item[data-mode="buy"].active span {
+    color: #00ff88;
+}
+
+.switch-item[data-mode="sell"]:hover,
+.switch-item[data-mode="sell"].active {
+    border-color: #ff6b6b;
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.3);
+}
+
+.switch-item[data-mode="sell"]:hover i,
+.switch-item[data-mode="sell"].active i,
+.switch-item[data-mode="sell"]:hover span,
+.switch-item[data-mode="sell"].active span {
+    color: #ff6b6b;
+}
+
+.switch-item[data-mode="stock"]:hover,
+.switch-item[data-mode="stock"].active {
+    border-color: var(--accent-yellow);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.switch-item[data-mode="stock"]:hover i,
+.switch-item[data-mode="stock"].active i,
+.switch-item[data-mode="stock"]:hover span,
+.switch-item[data-mode="stock"].active span {
+    color: var(--accent-yellow);
+}
+
+/* Mara Button Boxes */
+.mara-button-box {
+    position: fixed;
+    top: 79%;
+    left: 30px;
+    width: 380px;
+    background: linear-gradient(135deg, rgba(18, 48, 77, 0.95) 0%, rgba(26, 38, 57, 0.95) 100%);
+    backdrop-filter: var(--blur-effect);
+    -webkit-backdrop-filter: var(--blur-effect);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    color: var(--text-primary);
+    z-index: 2000;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    overflow: hidden;
+}
+
+.mara-button-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.mara-button-box:active {
+    transform: translateY(0);
+}
+
+/* Mining Battery Management Button */
+#mining-battery-btn {
+    top: 520px;
+    border-color: rgba(80, 227, 194, 0.3);
+}
+
+#mining-battery-btn:hover {
+    border-color: var(--accent-green);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(80, 227, 194, 0.2);
+}
+
+#mining-battery-btn .button-header i {
+    color: var(--accent-green);
+}
+
+/* Hedging Panel Button */
+#hedging-panel-btn {
+    top: 580px;
+    border-color: rgba(78, 149, 255, 0.3);
+}
+
+#hedging-panel-btn:hover {
+    border-color: var(--accent-blue);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(78, 149, 255, 0.2);
+}
+
+#hedging-panel-btn .button-header i {
+    color: var(--accent-blue);
+}
+
+.button-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.button-header i {
+    font-size: 1.3rem;
+    width: 24px;
+    text-align: center;
+}
+
+.button-header span {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+}
+
+.button-content {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+}
+
+.button-content i {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.mara-button-box:hover .button-content i {
+    color: var(--text-primary);
+    transform: translateX(3px);
+}
+
+/* New Facility Marker v2 */
+.facility-marker-v2 {
+    position: relative;
+    width: 50px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+}
+
+@keyframes bounceIn {
+    0% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+    60% { transform: translateY(5px) scale(1.1); opacity: 1; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.marker-pin-v2 {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-cyan) 100%);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: -5px 5px 15px rgba(0,0,0,0.2), 0 0 10px rgba(80, 227, 194, 0.4);
+    border: 2px solid white;
+    transition: transform 0.2s ease;
+}
+
+.marker-pin-v2 i {
+    transform: rotate(45deg);
+    font-size: 1.3rem;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.marker-shadow-v2 {
+    width: 25px;
+    height: 5px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 50%;
+    position: absolute;
+    bottom: 15px;
+    z-index: -1;
+    filter: blur(2px);
+    transition: all 0.2s ease;
+}
+
+.new-badge-v2 {
+    position: absolute;
+    top: 5px;
+    right: -15px;
+    background: #ff6b6b;
+    color: white;
+    font-size: 0.6rem;
+    font-weight: bold;
+    padding: 3px 7px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border: 1.5px solid white;
+    text-transform: uppercase;
+    transform: rotate(15deg);
+    transition: transform 0.2s ease;
+}
+
+.facility-marker-v2:hover .marker-pin-v2 {
+    transform: rotate(-45deg) scale(1.1);
+}
+
+.facility-marker-v2:hover .marker-shadow-v2 {
+    transform: scale(1.1);
+    bottom: 12px;
+}
+
+.facility-marker-v2:hover .new-badge-v2 {
+    transform: rotate(15deg) scale(1.1);
+}
+
+/* Facility Popup Styles */
+.facility-popup {
+    text-align: left;
+    padding: 0;
+    min-width: 260px;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.popup-header {
+    background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-cyan) 100%);
+    color: white;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.popup-icon {
+    font-size: 1.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.popup-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.popup-content {
+    padding: 18px;
+}
+
+.location-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.recommendation-reason {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0 0 16px 0;
+    border-left: 3px solid var(--accent-cyan);
+    padding-left: 10px;
+}
+
+.facility-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.facility-details .detail-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.facility-details .detail-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.facility-details .detail-value {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.new-location-notice {
+    font-size: 0.8rem;
+    color: var(--accent-green);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.facility-popup .clear-marker-btn {
+    width: calc(100% - 36px);
+    margin: 0 18px 18px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* Enhanced AI Facility Button */
+#ai-facility-btn {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 204, 106, 0.1) 100%);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    transition: all 0.3s ease;
+}
+
+#ai-facility-btn:hover {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 204, 106, 0.2) 100%);
+    border-color: rgba(0, 255, 136, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
+}
+
+#ai-facility-btn i {
+    color: #00ff88;
+    animation: facilityButtonPulse 2s ease-in-out infinite;
+}
+
+@keyframes facilityButtonPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Clear Marker Button Styles */
+.clear-marker-btn {
+    background: rgba(255, 107, 107, 0.8);
+    border: 1px solid #ff6b6b;
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: white;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.clear-marker-btn:hover {
+    background: rgba(255, 107, 107, 1);
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+}
+
+.clear-marker-btn i {
+    margin-right: 5px;
+    font-size: 0.9rem;
+}
+
+/* AI Chatbot Clear Button */
+#clear-facility-marker-btn {
+    background: rgba(255, 107, 107, 0.9);
+    border: none;
+    border-radius: 12px;
+    padding: 10px 15px;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#clear-facility-marker-btn:hover {
+    background: rgba(255, 107, 107, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
 } 

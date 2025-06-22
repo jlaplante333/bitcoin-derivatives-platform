@@ -31,6 +31,9 @@
             <img src="logos/mara_logo.svg" alt="MARA Energy Map" class="top-bar-logo">
             <div class="top-bar-subtitle">Smart Energy Panel</div>
             <div class="top-bar-icons">
+                <a href="consumers.php" class="nav-icon" title="Consumer Dashboard">
+                    <i class="fas fa-users"></i>
+                </a>
                 <i class="fas fa-search"></i>
                 <i class="fas fa-bell"></i>
                 <i class="fas fa-cog"></i>
@@ -38,7 +41,21 @@
             </div>
         </div>
 
-       
+        <!-- AI Side Panel -->
+        <div class="ui-panel side-panel">
+            <div class="side-panel-item" id="ai-location-btn">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Find Location with Mara AI</span>
+            </div>
+            <div class="side-panel-item" id="ai-facility-btn">
+                <i class="fas fa-play-circle"></i>
+                <span>Find New Location for Facility</span>
+            </div>
+            <div class="side-panel-item" id="ai-analysis-btn">
+                <i class="fas fa-chart-bar"></i>
+                <span>AI Energy Analysis</span>
+            </div>
+        </div>
         
         <div class="ui-panel efficiency-display" id="site-details-panel">
             <div class="close-btn" id="close-details-btn">
@@ -96,6 +113,30 @@
                 <div class="grid-item">
                     <div class="label"><i class="fas fa-cloud"></i> Clouds</div>
                     <div class="value" id="site-cloud-value">-</div>
+                </div>
+            </div>
+            
+            <!-- Operation Mode Switches -->
+            <div class="operation-switches">
+                <div class="switch-item active" data-mode="mining">
+                    <i class="fab fa-bitcoin"></i>
+                    <span>Mining</span>
+                </div>
+                <div class="switch-item" data-mode="ai">
+                    <i class="fas fa-brain"></i>
+                    <span>AI</span>
+                </div>
+                <div class="switch-item" data-mode="buy">
+                    <i class="fas fa-bolt"></i>
+                    <span>Buy</span>
+                </div>
+                <div class="switch-item" data-mode="sell">
+                    <i class="fas fa-plug"></i>
+                    <span>Sell</span>
+                </div>
+                <div class="switch-item" data-mode="stock">
+                    <i class="fas fa-battery-three-quarters"></i>
+                    <span>Store</span>
                 </div>
             </div>
         </div>
@@ -191,6 +232,39 @@
                     <div class="bar"></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Mara Mining Battery Management Button -->
+    <div class="mara-button-box" id="mining-battery-btn">
+        <div class="button-header">
+            <i class="fas fa-battery-full"></i>
+            <span>Mara Mining Battery Management</span>
+        </div>
+        <div class="button-content">
+            <i class="fas fa-arrow-right"></i>
+        </div>
+    </div>
+
+    <!-- Mara Hedging Panel Button -->
+    <div class="mara-button-box" id="hedging-panel-btn">
+        <div class="button-header">
+            <i class="fas fa-chart-line"></i>
+            <span>Mara Hedging Panel</span>
+        </div>
+        <div class="button-content">
+            <i class="fas fa-arrow-right"></i>
+        </div>
+    </div>
+
+    <!-- Mara Marketplace Button -->
+    <div class="mara-button-box" id="marketplace-btn">
+        <div class="button-header">
+            <i class="fas fa-store"></i>
+            <span>Mara Marketplace</span>
+        </div>
+        <div class="button-content">
+            <i class="fas fa-arrow-right"></i>
         </div>
     </div>
 
