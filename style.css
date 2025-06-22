@@ -106,7 +106,7 @@ body {
 
 .side-panel {
     left: 20px;
-    top: 50%;
+    top: 30%;
     transform: translateY(-50%);
     padding: 20px;
     z-index: 1001;
@@ -528,6 +528,7 @@ body {
     right: 30px;
     padding: 20px;
     width: 320px;
+    max-height: 400px;
     z-index: 1001;
     background: rgba(10, 25, 47, 0.7);
     display: flex;
@@ -608,6 +609,12 @@ body {
     color: var(--text-secondary);
     align-self: flex-start;
     border-bottom-left-radius: 4px;
+}
+
+.ai-message.assistant img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-top: 10px;
 }
 
 .ai-message .spinner {
@@ -838,7 +845,7 @@ body {
 }
 
 .grid-item .value {
-    font-size: 1.2rem;
+    font-size: 30px;
     font-weight: 600;
 }
 
@@ -1167,7 +1174,7 @@ body {
 /* Mini Satellite Icon (shown when feed is closed) */
 .mini-satellite-icon {
     position: fixed;
-    top: 40%;
+    top: 50%;
     left: 30px;
     width: 50px;
     height: 50px;
@@ -1244,4 +1251,238 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Operation Mode Switches */
+.operation-switches {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    scale: 0.8;
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.switch-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 50px;
+    text-align: center;
+}
+
+.switch-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.switch-item.active {
+    background: rgba(78, 149, 255, 0.3);
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 15px rgba(78, 149, 255, 0.3);
+}
+
+.switch-item i {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+}
+
+.switch-item.active i {
+    color: var(--accent-blue);
+}
+
+.switch-item span {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+
+.switch-item.active span {
+    color: var(--accent-blue);
+}
+
+/* Specific colors for different modes */
+.switch-item[data-mode="mining"]:hover,
+.switch-item[data-mode="mining"].active {
+    border-color: #f7931a;
+    box-shadow: 0 0 15px rgba(247, 147, 26, 0.3);
+}
+
+.switch-item[data-mode="mining"]:hover i,
+.switch-item[data-mode="mining"].active i,
+.switch-item[data-mode="mining"]:hover span,
+.switch-item[data-mode="mining"].active span {
+    color: #f7931a;
+}
+
+.switch-item[data-mode="ai"]:hover,
+.switch-item[data-mode="ai"].active {
+    border-color: var(--accent-green);
+    box-shadow: 0 0 15px rgba(80, 227, 194, 0.3);
+}
+
+.switch-item[data-mode="ai"]:hover i,
+.switch-item[data-mode="ai"].active i,
+.switch-item[data-mode="ai"]:hover span,
+.switch-item[data-mode="ai"].active span {
+    color: var(--accent-green);
+}
+
+.switch-item[data-mode="buy"]:hover,
+.switch-item[data-mode="buy"].active {
+    border-color: #00ff88;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+}
+
+.switch-item[data-mode="buy"]:hover i,
+.switch-item[data-mode="buy"].active i,
+.switch-item[data-mode="buy"]:hover span,
+.switch-item[data-mode="buy"].active span {
+    color: #00ff88;
+}
+
+.switch-item[data-mode="sell"]:hover,
+.switch-item[data-mode="sell"].active {
+    border-color: #ff6b6b;
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.3);
+}
+
+.switch-item[data-mode="sell"]:hover i,
+.switch-item[data-mode="sell"].active i,
+.switch-item[data-mode="sell"]:hover span,
+.switch-item[data-mode="sell"].active span {
+    color: #ff6b6b;
+}
+
+.switch-item[data-mode="stock"]:hover,
+.switch-item[data-mode="stock"].active {
+    border-color: var(--accent-yellow);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.switch-item[data-mode="stock"]:hover i,
+.switch-item[data-mode="stock"].active i,
+.switch-item[data-mode="stock"]:hover span,
+.switch-item[data-mode="stock"].active span {
+    color: var(--accent-yellow);
+}
+
+/* Mara Button Boxes */
+.mara-button-box {
+    position: fixed;
+    left: 30px;
+    width: 380px;
+    background: linear-gradient(135deg, rgba(18, 48, 77, 0.95) 0%, rgba(26, 38, 57, 0.95) 100%);
+    backdrop-filter: var(--blur-effect);
+    -webkit-backdrop-filter: var(--blur-effect);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    color: var(--text-primary);
+    z-index: 2000;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    overflow: hidden;
+}
+
+.mara-button-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.mara-button-box:active {
+    transform: translateY(0);
+}
+
+/* Mining Battery Management Button */
+#mining-battery-btn {
+    top: 520px;
+    border-color: rgba(80, 227, 194, 0.3);
+}
+
+#mining-battery-btn:hover {
+    border-color: var(--accent-green);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(80, 227, 194, 0.2);
+}
+
+#mining-battery-btn .button-header i {
+    color: var(--accent-green);
+}
+
+/* Hedging Panel Button */
+#hedging-panel-btn {
+    top: 580px;
+    border-color: rgba(78, 149, 255, 0.3);
+}
+
+#hedging-panel-btn:hover {
+    border-color: var(--accent-blue);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(78, 149, 255, 0.2);
+}
+
+#hedging-panel-btn .button-header i {
+    color: var(--accent-blue);
+}
+
+.button-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.button-header i {
+    font-size: 1.3rem;
+    width: 24px;
+    text-align: center;
+}
+
+.button-header span {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+}
+
+.button-content {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+}
+
+.button-content i {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.mara-button-box:hover .button-content i {
+    color: var(--text-primary);
+    transform: translateX(3px);
 } 

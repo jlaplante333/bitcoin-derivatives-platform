@@ -6,7 +6,7 @@
  */
 
 // OpenAI API Configuration
-define('OPENAI_API_KEY', 'your-openai-api-key-here');
+define('OPENAI_API_KEY', getenv('OPENAI_API_KEY') ?: '');
 define('OPENAI_API_URL', 'https://api.openai.com/v1/chat/completions');
 
 // Weather API Configuration
@@ -18,13 +18,18 @@ define('CACHE_DURATION', 300); // 5 minutes
 define('MAX_SITES_PER_REQUEST', 20);
 
 // Feature Flags
-define('ENABLE_AI_ANALYSIS', true);
+define('ENABLE_AI_ANALYSIS', getenv('ENABLE_AI_ANALYSIS') ?: false);
 define('ENABLE_ADVANCED_RECOMMENDATIONS', true);
 
 // Error Reporting (set to false in production)
-define('DEBUG_MODE', false);
+define('DEBUG_MODE', getenv('DEBUG_MODE') ?: false);
 
 // Logging Configuration
 define('LOG_API_CALLS', true);
 define('LOG_ERRORS', true);
+
+// Fallback configuration if config.php doesn't exist
+define('OPENAI_API_KEY', getenv('OPENAI_API_KEY') ?: '');
+define('ENABLE_AI_ANALYSIS', getenv('ENABLE_AI_ANALYSIS') ?: false);
+define('DEBUG_MODE', getenv('DEBUG_MODE') ?: false);
 ?> 

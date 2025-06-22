@@ -19,6 +19,175 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiActionButton = document.querySelector('.ai-action-btn');
     const aiConversationBox = document.getElementById('ai-conversation-box');
     
+    // Mara Button Boxes
+    const miningBatteryBtn = document.getElementById('mining-battery-btn');
+    const hedgingPanelBtn = document.getElementById('hedging-panel-btn');
+    
+    // AI Side Panel Buttons
+    const aiLocationBtn = document.getElementById('ai-location-btn');
+    const aiFacilityBtn = document.getElementById('ai-facility-btn');
+    const aiAnalysisBtn = document.getElementById('ai-analysis-btn');
+    
+    let recommendationStep = 1;
+    let recommendedSites = [];
+    
+    // Operation mode switches functionality
+    const operationSwitches = document.querySelectorAll('.switch-item');
+    operationSwitches.forEach(switchItem => {
+        switchItem.addEventListener('click', () => {
+            // Remove active class from all switches
+            operationSwitches.forEach(item => item.classList.remove('active'));
+            // Add active class to clicked switch
+            switchItem.classList.add('active');
+            
+            // Get the selected mode
+            const selectedMode = switchItem.getAttribute('data-mode');
+            console.log('Operation mode changed to:', selectedMode);
+            
+            // Here you can add specific functionality for each mode
+            handleOperationModeChange(selectedMode);
+        });
+    });
+    
+    function handleOperationModeChange(mode) {
+        switch(mode) {
+            case 'mining':
+                console.log('Switched to Bitcoin Mining mode');
+                // Add mining-specific functionality here
+                break;
+            case 'ai':
+                console.log('Switched to AI mode');
+                // Add AI-specific functionality here
+                break;
+            case 'buy':
+                console.log('Switched to Buy Energy mode');
+                // Add buy energy functionality here
+                break;
+            case 'sell':
+                console.log('Switched to Sell Energy mode');
+                // Add sell energy functionality here
+                break;
+            case 'stock':
+                console.log('Switched to Stock Battery mode');
+                // Add stock battery functionality here
+                break;
+        }
+    }
+
+    function determineOptimalOperationMode(siteData) {
+        if (!siteData) return 'mining'; // Default fallback
+        
+        const { avg_daily_kwh, performance_score, energy_type, weather } = siteData;
+        const temp = weather?.current?.temperature_2m || 25;
+        const cloudCover = weather?.current?.cloud_cover || 50;
+        
+        // AI Decision Logic
+        let scores = {
+            mining: 0,
+            ai: 0,
+            buy: 0,
+            sell: 0,
+            stock: 0
+        };
+        
+        // Mining Score: High energy output + good performance
+        if (avg_daily_kwh > 3000 && performance_score > 7) {
+            scores.mining += 3;
+        } else if (avg_daily_kwh > 2000 && performance_score > 5) {
+            scores.mining += 2;
+        } else {
+            scores.mining += 1;
+        }
+        
+        // AI Score: Moderate energy + stable conditions
+        if (avg_daily_kwh > 1500 && temp < 30 && cloudCover < 70) {
+            scores.ai += 3;
+        } else if (avg_daily_kwh > 1000) {
+            scores.ai += 2;
+        } else {
+            scores.ai += 1;
+        }
+        
+        // Buy Energy Score: Low energy output + high demand potential
+        if (avg_daily_kwh < 1500 && performance_score < 6) {
+            scores.buy += 3;
+        } else if (avg_daily_kwh < 2500) {
+            scores.buy += 2;
+        } else {
+            scores.buy += 1;
+        }
+        
+        // Sell Energy Score: High energy output + good market conditions
+        if (avg_daily_kwh > 4000 && performance_score > 8) {
+            scores.sell += 3;
+        } else if (avg_daily_kwh > 3000 && performance_score > 6) {
+            scores.sell += 2;
+        } else {
+            scores.sell += 1;
+        }
+        
+        // Stock Battery Score: Variable energy + storage potential
+        if (avg_daily_kwh > 2000 && avg_daily_kwh < 4000) {
+            scores.stock += 3;
+        } else if (avg_daily_kwh > 1000) {
+            scores.stock += 2;
+        } else {
+            scores.stock += 1;
+        }
+        
+        // Additional factors
+        if (energy_type.includes('Solar') && temp > 20) {
+            scores.sell += 1;
+            scores.mining += 1;
+        }
+        
+        if (energy_type.includes('Wind')) {
+            scores.stock += 1;
+            scores.ai += 1;
+        }
+        
+        if (energy_type.includes('Grid')) {
+            scores.buy += 1;
+            scores.sell += 1;
+        }
+        
+        // Find the mode with highest score
+        let bestMode = 'mining';
+        let highestScore = scores.mining;
+        
+        for (const [mode, score] of Object.entries(scores)) {
+            if (score > highestScore) {
+                highestScore = score;
+                bestMode = mode;
+            }
+        }
+        
+        console.log('AI Analysis - Site:', siteData.name);
+        console.log('Energy Output:', avg_daily_kwh, 'kWh');
+        console.log('Performance Score:', performance_score);
+        console.log('Temperature:', temp, '°C');
+        console.log('Mode Scores:', scores);
+        console.log('AI Recommendation:', bestMode);
+        
+        return bestMode;
+    }
+    
+    function setOptimalOperationMode(siteData) {
+        const optimalMode = determineOptimalOperationMode(siteData);
+        
+        // Remove active class from all switches
+        operationSwitches.forEach(item => item.classList.remove('active'));
+        
+        // Add active class to the optimal mode
+        const optimalSwitch = document.querySelector(`[data-mode="${optimalMode}"]`);
+        if (optimalSwitch) {
+            optimalSwitch.classList.add('active');
+            console.log(`AI automatically selected: ${optimalMode} mode for ${siteData.name}`);
+        }
+        
+        return optimalMode;
+    }
+
     closeDetailsBtn.addEventListener('click', () => {
         console.log('Close button clicked');
         hideSiteDetails();
@@ -379,6 +548,10 @@ document.addEventListener('DOMContentLoaded', () => {
         locationAnalysisPanel.classList.add('show');
 
         siteInfoPanel.classList.add('show');
+        
+        // --- AI Mode Selection ---
+        const optimalMode = setOptimalOperationMode(site);
+        console.log(`AI has selected ${optimalMode} mode for ${site.name} based on site analysis`);
     }
 
     function hideSiteDetails() {
@@ -502,7 +675,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleAIChat() {
-        const userMessage = "Find Location with Mara AI";
+        const userMessage = aiActionButton.textContent;
         addMessageToConversation('user', userMessage);
         
         // Disable button to prevent multiple requests
@@ -515,7 +688,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Prepare data to send to the backend
         const postData = {
             sites: allSitesData,
-            bestSite: currentBestSite
+            bestSite: currentBestSite,
+            excludedSites: recommendedSites
         };
 
         fetch('api.php?action=get_ai_recommendation', {
@@ -529,7 +703,12 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 typingIndicator.remove(); // Remove typing indicator
                 if (data.recommendation) {
-                    addMessageToConversation('assistant', data.recommendation);
+                    addMessageToConversation('assistant', data.recommendation, false, data.photoUrl);
+                    if (data.location && data.location.lat && data.location.lon) {
+                        map.flyTo([data.location.lat, data.location.lon], 12); // Fly to the location
+                        recommendedSites.push(data.location.name); // Add to exclusion list
+                        updateAIButton(); // Update button for next step
+                    }
                 } else {
                     addMessageToConversation('assistant', 'Sorry, I could not get a recommendation.');
                 }
@@ -546,18 +725,183 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    function addMessageToConversation(sender, message, isTyping = false) {
+    function updateAIButton() {
+        recommendationStep++;
+        if (recommendationStep === 2) {
+            aiActionButton.textContent = "Find 2nd Best Location";
+        } else if (recommendationStep === 3) {
+            aiActionButton.textContent = "Find 3rd Best Location";
+        } else {
+            aiActionButton.textContent = "Start Over";
+            aiActionButton.removeEventListener('click', handleAIChat);
+            aiActionButton.addEventListener('click', () => {
+                recommendationStep = 1;
+                recommendedSites = [];
+                aiConversationBox.innerHTML = '';
+                aiActionButton.textContent = "Find Location with Mara AI";
+                handleAIChat();
+            });
+        }
+    }
+
+    function addMessageToConversation(sender, message, isTyping = false, imageUrl = null) {
         const messageElement = document.createElement('div');
         messageElement.classList.add('ai-message', sender);
+        
         if (isTyping) {
             messageElement.innerHTML = message;
         } else {
-            messageElement.textContent = message;
+            const textElement = document.createElement('p');
+            textElement.textContent = message;
+            messageElement.appendChild(textElement);
         }
+
+        if (imageUrl) {
+            const imageElement = document.createElement('img');
+            imageElement.src = imageUrl;
+            messageElement.appendChild(imageElement);
+        }
+
         aiConversationBox.appendChild(messageElement);
         // Scroll to the latest message
         aiConversationBox.scrollTop = aiConversationBox.scrollHeight;
         return messageElement;
+    }
+
+    // Mara Button Event Listeners
+    miningBatteryBtn.addEventListener('click', () => {
+        console.log('Mara Mining Battery Management clicked');
+        // TODO: Add link when provided
+        // window.open('YOUR_LINK_HERE', '_blank');
+    });
+    
+    hedgingPanelBtn.addEventListener('click', () => {
+        console.log('Mara Hedging Panel clicked');
+        // TODO: Add link when provided
+        // window.open('YOUR_LINK_HERE', '_blank');
+    });
+
+    // AI Side Panel Event Listeners
+    aiLocationBtn.addEventListener('click', () => {
+        console.log('Find Location with Mara AI clicked');
+        // Open the AI chatbot and trigger the location finder
+        const aiChatbot = document.querySelector('.ai-chatbot');
+        aiChatbot.style.display = 'flex';
+        handleAIChat();
+    });
+    
+    aiFacilityBtn.addEventListener('click', () => {
+        console.log('Find New Location for Facility clicked');
+        handleFacilityLocationSearch();
+    });
+    
+    aiAnalysisBtn.addEventListener('click', () => {
+        console.log('AI Energy Analysis clicked');
+        handleAIEnergyAnalysis();
+    });
+    
+    function handleFacilityLocationSearch() {
+        // Show typing indicator in AI chatbot
+        const aiChatbot = document.querySelector('.ai-chatbot');
+        aiChatbot.style.display = 'flex';
+        
+        addMessageToConversation('user', 'Find new location for building facility');
+        
+        // Disable button to prevent multiple requests
+        aiFacilityBtn.style.pointerEvents = 'none';
+        aiFacilityBtn.style.opacity = '0.6';
+        
+        // Show typing indicator
+        const typingIndicator = addMessageToConversation('assistant', '<div class="spinner"></div><div class="spinner"></div><div class="spinner"></div>', true);
+
+        // Prepare data for facility location search
+        const postData = {
+            sites: allSitesData,
+            bestSite: currentBestSite,
+            excludedSites: recommendedSites,
+            searchType: 'facility'
+        };
+
+        fetch('api.php?action=get_ai_recommendation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(postData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                typingIndicator.remove();
+                if (data.recommendation) {
+                    addMessageToConversation('assistant', data.recommendation, false, data.photoUrl);
+                    if (data.location && data.location.lat && data.location.lon) {
+                        map.flyTo([data.location.lat, data.location.lon], 12);
+                        recommendedSites.push(data.location.name);
+                    }
+                } else {
+                    addMessageToConversation('assistant', 'Sorry, I could not find a suitable facility location.');
+                }
+            })
+            .catch(error => {
+                console.error("Facility Location Search Error:", error);
+                typingIndicator.remove();
+                addMessageToConversation('assistant', 'There was an error finding facility locations.');
+            })
+            .finally(() => {
+                // Re-enable button
+                aiFacilityBtn.style.pointerEvents = 'auto';
+                aiFacilityBtn.style.opacity = '1';
+            });
+    }
+    
+    function handleAIEnergyAnalysis() {
+        // Show typing indicator in AI chatbot
+        const aiChatbot = document.querySelector('.ai-chatbot');
+        aiChatbot.style.display = 'flex';
+        
+        addMessageToConversation('user', 'Analyze energy patterns and provide insights');
+        
+        // Disable button to prevent multiple requests
+        aiAnalysisBtn.style.pointerEvents = 'none';
+        aiAnalysisBtn.style.opacity = '0.6';
+        
+        // Show typing indicator
+        const typingIndicator = addMessageToConversation('assistant', '<div class="spinner"></div><div class="spinner"></div><div class="spinner"></div>', true);
+
+        // Prepare data for energy analysis
+        const postData = {
+            sites: allSitesData,
+            bestSite: currentBestSite,
+            excludedSites: recommendedSites,
+            searchType: 'analysis'
+        };
+
+        fetch('api.php?action=get_ai_recommendation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(postData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                typingIndicator.remove();
+                if (data.recommendation) {
+                    addMessageToConversation('assistant', data.recommendation, false, data.photoUrl);
+                } else {
+                    addMessageToConversation('assistant', 'Sorry, I could not analyze the energy patterns.');
+                }
+            })
+            .catch(error => {
+                console.error("AI Energy Analysis Error:", error);
+                typingIndicator.remove();
+                addMessageToConversation('assistant', 'There was an error analyzing energy patterns.');
+            })
+            .finally(() => {
+                // Re-enable button
+                aiAnalysisBtn.style.pointerEvents = 'auto';
+                aiAnalysisBtn.style.opacity = '1';
+            });
     }
 
     initDashboard();
