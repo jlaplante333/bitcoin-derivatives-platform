@@ -1,0 +1,20 @@
+[
+  {
+    "timestamp": "2025-06-21T13:01:22.157015",
+    "type": "charge",
+    "power_mw": 5.0,
+    "duration_hours": 2.0,
+    "energy_stored_mwh": 9.0,
+    "charge_before": 25.0,
+    "charge_after": 43.0
+  },
+  {
+    "timestamp": "2025-06-21T13:01:22.157040",
+    "type": "discharge",
+    "power_mw": 3.0,
+    "duration_hours": 1.0,
+    "energy_used_mwh": 3.0,
+    "charge_before": 43.0,
+    "charge_after": 37.0
+  }
+]
