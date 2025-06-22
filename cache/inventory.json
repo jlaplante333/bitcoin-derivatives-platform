@@ -1,0 +1,1 @@
+{"miners":{"air":{"hashrate":1000,"power":3333},"hydro":{"hashrate":10000,"power":5000},"immersion":{"hashrate":5000,"power":10000}},"inference":{"gpu":{"tokens":1000,"power":3333},"asic":{"tokens":5000,"power":10000}}}
