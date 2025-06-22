@@ -1,3 +1,35 @@
+# Configuration files with sensitive data
+config.php
+.env
+*.env
+
+# API keys and secrets
+secrets.php
+api_keys.php
+
+# Logs and temporary files
+*.log
+temp/
+cache/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Backup files
+*.bak
+*.backup 
 # Environment variables
 .env
 
