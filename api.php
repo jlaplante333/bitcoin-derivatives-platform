@@ -220,7 +220,32 @@ function handleAIAction() {
         $prompt = "As Mara, find the most optimal places for LG Battery installation. Consider renewable energy sources, grid stability, and land availability. Provide a brief recommendation of 2-3 locations.";
     } else {
         if ($searchType === 'facility') {
-            $prompt = "As Mara, analyze this site data to find the best location for building a new energy facility. Consider factors like energy potential, infrastructure access, land availability, and regulatory environment. First line: 'Top Recommendation: [Site Name]'. Then provide a brief recommendation of the top 2-3 locations for facility construction.\n\n";
+            $prompt = "As Mara, find a COMPLETELY NEW location in the world for building a new energy facility. DO NOT suggest any of these existing locations: " . implode(', ', array_column($sites, 'name')) . "
+
+Find a NEW location that meets these criteria:
+
+1. **Energy Potential**: High solar irradiance (>5 kWh/m²/day) or strong wind speeds (>6 m/s)
+2. **Infrastructure Access**: Near major power grids, highways, or ports
+3. **Land Availability**: Flat terrain suitable for large-scale construction
+4. **Regulatory Environment**: Pro-energy policies, tax incentives, or special economic zones
+5. **Economic Viability**: Low land costs, good ROI potential
+6. **Environmental Impact**: Minimal ecological disruption, away from protected areas
+
+Focus on these regions for NEW locations:
+- **Middle East**: UAE, Saudi Arabia, Qatar (solar potential)
+- **Africa**: Morocco, Egypt, South Africa (solar/wind)
+- **Asia**: India, Vietnam, Thailand (emerging markets)
+- **Europe**: Spain, Portugal, Greece (renewable hubs)
+- **Americas**: Chile, Mexico, Brazil (energy potential)
+- **Oceania**: Australia (solar/wind potential)
+
+Provide the response in this exact format:
+First line: 'Top Recommendation: [City/Region Name], [Country]'
+Second line: 'Coordinates: [Latitude], [Longitude]'
+Third line: 'Recommended Facility Type: [Solar, Wind, or Hybrid]'
+Then provide detailed analysis of why this NEW location is optimal for facility construction.
+
+Ensure the coordinates are accurate and the location is NOT in the existing site list.\n\n";
         } elseif ($searchType === 'analysis') {
             $prompt = "As Mara, analyze the energy patterns and provide insights about these sites. Consider energy output, performance scores, weather conditions, and market opportunities. Provide a brief analysis of energy trends and recommendations.\n\n";
         } else {
@@ -241,7 +266,18 @@ function handleAIAction() {
     
     $aiResponse = callOpenAI($prompt);
     
-    // --- Parse AI Response to find location ---
+    // For facility search, we don't try to match with existing sites
+    // since we want completely new locations
+    if ($searchType === 'facility') {
+        echo json_encode([
+            'recommendation' => $aiResponse,
+            'location' => null, // No existing location match
+            'photoUrl' => null
+        ]);
+        exit;
+    }
+    
+    // --- Parse AI Response to find location (only for non-facility searches) ---
     $recommendedSite = null;
     $photoUrl = null;
     $lines = explode("\n", $aiResponse);
@@ -304,7 +340,7 @@ function callOpenAI($prompt) {
             ["role" => "system", "content" => "You are Mara, an AI energy expert. Keep responses brief and to the point."],
             ["role" => "user", "content" => $prompt]
         ],
-        "max_tokens" => 150,
+        "max_tokens" => 300,
         "temperature" => 0.5
     ]));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [

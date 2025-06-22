@@ -31,6 +31,9 @@
             <img src="logos/mara_logo.svg" alt="MARA Energy Map" class="top-bar-logo">
             <div class="top-bar-subtitle">Smart Energy Panel</div>
             <div class="top-bar-icons">
+                <a href="consumers.php" class="nav-icon" title="Consumer Dashboard">
+                    <i class="fas fa-users"></i>
+                </a>
                 <i class="fas fa-search"></i>
                 <i class="fas fa-bell"></i>
                 <i class="fas fa-cog"></i>
@@ -45,7 +48,7 @@
                 <span>Find Location with Mara AI</span>
             </div>
             <div class="side-panel-item" id="ai-facility-btn">
-                <i class="fas fa-building"></i>
+                <i class="fas fa-play-circle"></i>
                 <span>Find New Location for Facility</span>
             </div>
             <div class="side-panel-item" id="ai-analysis-btn">
@@ -248,6 +251,17 @@
         <div class="button-header">
             <i class="fas fa-chart-line"></i>
             <span>Mara Hedging Panel</span>
+        </div>
+        <div class="button-content">
+            <i class="fas fa-arrow-right"></i>
+        </div>
+    </div>
+
+    <!-- Mara Marketplace Button -->
+    <div class="mara-button-box" id="marketplace-btn">
+        <div class="button-header">
+            <i class="fas fa-store"></i>
+            <span>Mara Marketplace</span>
         </div>
         <div class="button-content">
             <i class="fas fa-arrow-right"></i>

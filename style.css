@@ -104,6 +104,16 @@ body {
     color: var(--text-secondary);
 }
 
+.nav-icon {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-icon:hover {
+    color: var(--accent-blue);
+}
+
 .side-panel {
     left: 20px;
     top: 30%;
@@ -1386,6 +1396,7 @@ body {
 /* Mara Button Boxes */
 .mara-button-box {
     position: fixed;
+    top: 79%;
     left: 30px;
     width: 380px;
     background: linear-gradient(135deg, rgba(18, 48, 77, 0.95) 0%, rgba(26, 38, 57, 0.95) 100%);
@@ -1485,4 +1496,252 @@ body {
 .mara-button-box:hover .button-content i {
     color: var(--text-primary);
     transform: translateX(3px);
+}
+
+/* New Facility Marker v2 */
+.facility-marker-v2 {
+    position: relative;
+    width: 50px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+}
+
+@keyframes bounceIn {
+    0% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+    60% { transform: translateY(5px) scale(1.1); opacity: 1; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.marker-pin-v2 {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-cyan) 100%);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: -5px 5px 15px rgba(0,0,0,0.2), 0 0 10px rgba(80, 227, 194, 0.4);
+    border: 2px solid white;
+    transition: transform 0.2s ease;
+}
+
+.marker-pin-v2 i {
+    transform: rotate(45deg);
+    font-size: 1.3rem;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.marker-shadow-v2 {
+    width: 25px;
+    height: 5px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 50%;
+    position: absolute;
+    bottom: 15px;
+    z-index: -1;
+    filter: blur(2px);
+    transition: all 0.2s ease;
+}
+
+.new-badge-v2 {
+    position: absolute;
+    top: 5px;
+    right: -15px;
+    background: #ff6b6b;
+    color: white;
+    font-size: 0.6rem;
+    font-weight: bold;
+    padding: 3px 7px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border: 1.5px solid white;
+    text-transform: uppercase;
+    transform: rotate(15deg);
+    transition: transform 0.2s ease;
+}
+
+.facility-marker-v2:hover .marker-pin-v2 {
+    transform: rotate(-45deg) scale(1.1);
+}
+
+.facility-marker-v2:hover .marker-shadow-v2 {
+    transform: scale(1.1);
+    bottom: 12px;
+}
+
+.facility-marker-v2:hover .new-badge-v2 {
+    transform: rotate(15deg) scale(1.1);
+}
+
+/* Facility Popup Styles */
+.facility-popup {
+    text-align: left;
+    padding: 0;
+    min-width: 260px;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.popup-header {
+    background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-cyan) 100%);
+    color: white;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.popup-icon {
+    font-size: 1.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.popup-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.popup-content {
+    padding: 18px;
+}
+
+.location-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.recommendation-reason {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0 0 16px 0;
+    border-left: 3px solid var(--accent-cyan);
+    padding-left: 10px;
+}
+
+.facility-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.facility-details .detail-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.facility-details .detail-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.facility-details .detail-value {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.new-location-notice {
+    font-size: 0.8rem;
+    color: var(--accent-green);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.facility-popup .clear-marker-btn {
+    width: calc(100% - 36px);
+    margin: 0 18px 18px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* Enhanced AI Facility Button */
+#ai-facility-btn {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 204, 106, 0.1) 100%);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    transition: all 0.3s ease;
+}
+
+#ai-facility-btn:hover {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 204, 106, 0.2) 100%);
+    border-color: rgba(0, 255, 136, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
+}
+
+#ai-facility-btn i {
+    color: #00ff88;
+    animation: facilityButtonPulse 2s ease-in-out infinite;
+}
+
+@keyframes facilityButtonPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Clear Marker Button Styles */
+.clear-marker-btn {
+    background: rgba(255, 107, 107, 0.8);
+    border: 1px solid #ff6b6b;
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: white;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.clear-marker-btn:hover {
+    background: rgba(255, 107, 107, 1);
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+}
+
+.clear-marker-btn i {
+    margin-right: 5px;
+    font-size: 0.9rem;
+}
+
+/* AI Chatbot Clear Button */
+#clear-facility-marker-btn {
+    background: rgba(255, 107, 107, 0.9);
+    border: none;
+    border-radius: 12px;
+    padding: 10px 15px;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#clear-facility-marker-btn:hover {
+    background: rgba(255, 107, 107, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
 } 

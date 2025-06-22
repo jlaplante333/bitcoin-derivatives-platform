@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mara Button Boxes
     const miningBatteryBtn = document.getElementById('mining-battery-btn');
     const hedgingPanelBtn = document.getElementById('hedging-panel-btn');
+    const marketplaceBtn = document.getElementById('marketplace-btn');
     
     // AI Side Panel Buttons
     const aiLocationBtn = document.getElementById('ai-location-btn');
@@ -555,10 +556,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function hideSiteDetails() {
-        siteDetailsPanel.classList.remove('show');
-        siteInfoPanel.classList.remove('show');
-        locationAnalysisPanel.classList.remove('show');
+        document.getElementById('site-details-panel').classList.remove('show');
+        document.getElementById('location-analysis-panel').classList.remove('show');
+        document.getElementById('site-info-panel').classList.remove('show');
+        
+        // Clear facility start marker when closing panels
+        clearFacilityStartMarker();
     }
+
+    function clearFacilityStartMarker() {
+        if (window.facilityStartMarker) {
+            map.removeLayer(window.facilityStartMarker);
+            window.facilityStartMarker = null;
+        }
+    }
+
+    // Make function globally accessible for popup button
+    window.clearFacilityStartMarker = clearFacilityStartMarker;
 
     function getEnergyIcon(type) {
         const energy = type.toLowerCase();
@@ -781,6 +795,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // window.open('YOUR_LINK_HERE', '_blank');
     });
 
+    marketplaceBtn.addEventListener('click', () => {
+        console.log('Mara Marketplace clicked');
+        window.location.href = 'consumers.php';
+    });
+
     // AI Side Panel Event Listeners
     aiLocationBtn.addEventListener('click', () => {
         console.log('Find Location with Mara AI clicked');
@@ -834,12 +853,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 typingIndicator.remove();
                 if (data.recommendation) {
                     addMessageToConversation('assistant', data.recommendation, false, data.photoUrl);
-                    if (data.location && data.location.lat && data.location.lon) {
+                    
+                    // Parse new location from AI response
+                    const newLocation = parseNewLocationFromAIResponse(data.recommendation);
+                    
+                    if (newLocation && newLocation.lat && newLocation.lon) {
+                        // Fly to the new recommended location
+                        map.flyTo([newLocation.lat, newLocation.lon], 12);
+                        
+                        // After flying, pan to adjust for UI
+                        map.once('moveend', () => {
+                            map.panBy([0, -150]); // Pan down to move center up
+                        });
+                        
+                        // Add a start icon marker for the new facility location
+                        addFacilityStartMarker(newLocation);
+                        
+                        // Show success message
+                        addMessageToConversation('assistant', `✅ New facility location discovered! I've marked ${newLocation.name} with a start icon on the map. This is a completely new location with optimal potential for building a new energy facility.`);
+                    } else if (data.location && data.location.lat && data.location.lon) {
+                        // Fallback to existing location parsing
                         map.flyTo([data.location.lat, data.location.lon], 12);
+                        
+                        // After flying, pan to adjust for UI
+                        map.once('moveend', () => {
+                            map.panBy([0, -150]); // Pan down to move center up
+                        });
+                        
                         recommendedSites.push(data.location.name);
+                        addFacilityStartMarker(data.location);
+                        addMessageToConversation('assistant', `✅ Facility location found! I've marked ${data.location.name} with a start icon on the map.`);
+                    } else {
+                        addMessageToConversation('assistant', 'I found a new location but couldn\'t get the exact coordinates. Please check the recommendation above.');
                     }
                 } else {
-                    addMessageToConversation('assistant', 'Sorry, I could not find a suitable facility location.');
+                    addMessageToConversation('assistant', 'Sorry, I could not find a suitable new facility location.');
                 }
             })
             .catch(error => {
@@ -852,6 +900,95 @@ document.addEventListener('DOMContentLoaded', () => {
                 aiFacilityBtn.style.pointerEvents = 'auto';
                 aiFacilityBtn.style.opacity = '1';
             });
+    }
+    
+    function addFacilityStartMarker(location) {
+        // Remove any existing facility start markers
+        if (window.facilityStartMarker) {
+            map.removeLayer(window.facilityStartMarker);
+        }
+        
+        // Create a custom start icon marker
+        const startIconHtml = `
+            <div class="facility-marker-v2">
+                <div class="marker-pin-v2">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="marker-shadow-v2"></div>
+                <span class="new-badge-v2">NEW</span>
+            </div>
+        `;
+        
+        const startIcon = L.divIcon({
+            html: startIconHtml,
+            className: '', // remove default leaflet icon styles
+            iconSize: [50, 70],
+            iconAnchor: [25, 70] // Point of the pin
+        });
+        
+        // Create and add the marker
+        const energyIconData = getEnergyIcon(location.energy_type);
+        window.facilityStartMarker = L.marker([location.lat, location.lon], { icon: startIcon })
+            .addTo(map)
+            .bindPopup(`
+                <div class="facility-popup">
+                    <div class="popup-header">
+                        <span class="popup-icon">${energyIconData.icon}</span>
+                        <h3 class="popup-title">New Location Discovered</h3>
+                    </div>
+                    <div class="popup-content">
+                        <p class="location-name"><strong>${location.name}</strong></p>
+                        <p class="recommendation-reason">AI Recommended for NEW facility construction</p>
+                        <div class="facility-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Facility Type</span>
+                                <span class="detail-value" style="color: ${energyIconData.color};">${location.energy_type}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Perf. Score</span>
+                                <span class="detail-value">9.5/10</span>
+                            </div>
+                        </div>
+                        <p class="new-location-notice">
+                            <i class="fas fa-star"></i> Completely new location
+                        </p>
+                    </div>
+                    <button onclick="clearFacilityStartMarker()" class="clear-marker-btn">Clear Marker</button>
+                </div>
+            `);
+        
+        // Add animation to the marker
+        setTimeout(() => {
+            if (window.facilityStartMarker) {
+                window.facilityStartMarker.getElement()?.classList.add('pulse-animation');
+            }
+        }, 500);
+        
+        // Add clear marker button to AI chatbot
+        addClearMarkerButton();
+    }
+    
+    function addClearMarkerButton() {
+        // Remove existing clear button if any
+        const existingBtn = document.getElementById('clear-facility-marker-btn');
+        if (existingBtn) {
+            existingBtn.remove();
+        }
+        
+        // Create clear marker button
+        const clearBtn = document.createElement('button');
+        clearBtn.id = 'clear-facility-marker-btn';
+        clearBtn.className = 'clear-marker-btn';
+        clearBtn.innerHTML = '<i class="fas fa-times"></i> Clear Facility Marker';
+        clearBtn.onclick = () => {
+            clearFacilityStartMarker();
+            clearBtn.remove();
+            addMessageToConversation('assistant', '✅ Facility marker cleared from the map.');
+        };
+        
+        // Add button to AI chatbot
+        const aiChatbot = document.querySelector('.ai-chatbot');
+        aiChatbot.appendChild(clearBtn);
     }
     
     function handleAIEnergyAnalysis() {
@@ -902,6 +1039,77 @@ document.addEventListener('DOMContentLoaded', () => {
                 aiAnalysisBtn.style.pointerEvents = 'auto';
                 aiAnalysisBtn.style.opacity = '1';
             });
+    }
+
+    function parseNewLocationFromAIResponse(aiResponse) {
+        const lines = aiResponse.split('\n');
+        let locationName = '';
+        let latitude = null;
+        let longitude = null;
+        let facilityType = 'New Facility'; // Default value
+
+        // Parse location name from first line
+        for (let line of lines) {
+            if (line.includes('Top Recommendation:')) {
+                locationName = line.replace('Top Recommendation:', '').trim();
+                break;
+            }
+        }
+        
+        // Parse coordinates from second line (supporting degree symbols and N/S/E/W)
+        for (let line of lines) {
+            if (line.toLowerCase().includes('coordinates:')) {
+                // Try to match formats like: 26.9167° N, 70.9167° E
+                const coordMatch = line.match(/Coordinates:\s*([\d.]+)\s*°?\s*([NS])?,?\s*([\d.]+)\s*°?\s*([EW])?/i);
+                if (coordMatch) {
+                    let lat = parseFloat(coordMatch[1]);
+                    let latDir = (coordMatch[2] || '').toUpperCase();
+                    let lon = parseFloat(coordMatch[3]);
+                    let lonDir = (coordMatch[4] || '').toUpperCase();
+                    if (latDir === 'S') lat = -lat;
+                    if (lonDir === 'W') lon = -lon;
+                    latitude = lat;
+                    longitude = lon;
+                } else {
+                    // Fallback: match plain decimal
+                    const fallback = line.match(/Coordinates:\s*([\-\d.]+),\s*([\-\d.]+)/);
+                    if (fallback) {
+                        latitude = parseFloat(fallback[1]);
+                        longitude = parseFloat(fallback[2]);
+                    }
+                }
+                break;
+            }
+        }
+        
+        // Parse Recommended Facility Type
+        for (let line of lines) {
+            if (line.toLowerCase().includes('recommended facility type:')) {
+                facilityType = line.replace(/recommended facility type:/i, '').trim();
+                break;
+            }
+        }
+        
+        // If we found both name and coordinates, create location object
+        if (locationName && latitude !== null && longitude !== null) {
+            return {
+                name: locationName,
+                lat: latitude,
+                lon: longitude,
+                energy_type: facilityType, // Use parsed facility type
+                performance_score: 9.5, // High score for new locations
+                avg_daily_kwh: 8000, // Estimated high output
+                weather: {
+                    current: {
+                        temperature_2m: 25,
+                        wind_speed_10m: 15,
+                        cloud_cover: 20
+                    }
+                }
+            };
+        }
+        
+        return null;
     }
 
     initDashboard();
